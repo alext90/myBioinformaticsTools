@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "needleman_wunsch.h"
+#include "alignment.h"
 #include "fasta_parser.h"
 
 int main(int argc, char* argv[]) {
@@ -28,8 +28,15 @@ int main(int argc, char* argv[]) {
     int mismatch = -1;
     int gap = -2;
 
-    std::cout << "Running Needleman-Wunsch algorithm..." << std::endl;
-    needleman_wunsch(seq1, seq2, match, mismatch, gap, output_file);
+    auto [aligned_seq1_nw, aligned_seq2_nw, score_nw] = needleman_wunsch(seq1, seq2, match, mismatch, gap);
+    std::cout << "Needleman-Wunsch Alignment:\n";
+    std::cout << "Alignment Score: " << score_nw << std::endl;
+    print_alignment(aligned_seq1_nw, aligned_seq2_nw);
+
+    auto [aligned_seq1_sw, aligned_seq2_sw, score_sw] = smith_waterman(seq1, seq2, match, mismatch, gap);
+    std::cout << "\nSmith-Waterman Alignment:\n";
+    std::cout << "Alignment Score: " << score_sw << std::endl;
+    print_alignment(aligned_seq1_sw, aligned_seq2_sw);
 
     return 0;
 }

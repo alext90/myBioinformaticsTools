@@ -1,17 +1,41 @@
+# Compiler and flags
 CXX = g++
-CXXFLAGS = -Wall -Wextra -Iinclude
+CXXFLAGS = -Wall -Wextra -std=c++17
 
-SRC = src/main.cpp src/needleman_wunsch.cpp src/fasta_parser.cpp
-OBJ = $(SRC:.cpp=.o)
-TARGET = needleman_wunsch
+# Directories
+SRC_DIR = src
+INC_DIR = include
+BUILD_DIR = build
+TEST_DIR = test
 
-all: $(TARGET)
+# Source files
+SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
+# Object files
+OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 
-$(TARGET): $(OBJ)
+# Executable name
+EXECUTABLE = $(BUILD_DIR)/alignment_program
+
+# Default target
+all: $(EXECUTABLE)
+
+# Build the executable
+$(EXECUTABLE): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Compile source files into object files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(BUILD_DIR)  # Create build directory if it doesn't exist
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
 
+# Clean the build
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -rf $(BUILD_DIR)/*
+	rm -f $(EXECUTABLE)
+
+# Run tests
+test:
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -o $(BUILD_DIR)/test_program $(TEST_DIR)/*.cpp $(OBJECTS)  # Adjust this if needed
+	$(BUILD_DIR)/test_program
+
+.PHONY: all clean test
