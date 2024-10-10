@@ -1,6 +1,5 @@
 // alignment.cpp
 #include "alignment.h"
-#include "stats.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>

@@ -3,58 +3,93 @@
 
 class Statistics {
 private:
-    std::string aligned_seq1;
-    std::string aligned_seq2;
+    std::string _seq1;
+    std::string _seq2;
+    
     double identity_percentage;
     double gap_percentage;
+    double mutation_frequency;
+    double alignment_coverage;
+    double hamming_distance;
 
-    // Private method to calculate identity percentage
-    double calculate_identity() {
-        int matches = 0;
-        int total_positions = aligned_seq1.length();
+    int num_gaps;
+    int longest_continous_match;
+
+    void calculate_statistics() {
+        int total_positions = _seq1.length();
         
+        int mutations = 0;
+        int _positions = 0;
+
+        int longest_match = 0;
+        int current_match = 0;        
+
+        int gaps = 0;
+        int matches = 0;
+        int mismatches = 0;
+
         for (int i = 0; i < total_positions; ++i) {
-            // Count only non-gap matches
-            if (aligned_seq1[i] != '-' && aligned_seq2[i] != '-' && aligned_seq1[i] == aligned_seq2[i]) {
+            // matches
+            if (seq1[i] != '-' && _seq2[i] != '-' && _seq1[i] == _seq2[i]) {
                 matches++;
             }
-        }
+            if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] != seq2[i]) {
+                mismatches++;
+            }
 
-        return (static_cast<double>(matches) / total_positions) * 100;
-    }
+            // Count only non-gap mismatches
+            if (_seq1[i] != '-' && _seq2[i] != '-' && _seq1[i] != _seq2[i]) {
+                mutations++;
+            }
 
-    // Private method to calculate gap percentage
-    double calculate_gap_percentage() {
-        int gaps = 0;
-        int total_positions = aligned_seq1.length();
+            // correct alignments
+            if (_seq1[i] != '-' || _seq2[i] != '-') {
+                _positions++;
+            }
 
-        for (int i = 0; i < total_positions; ++i) {
-            // Count positions where there is a gap ('-') in either sequence
-            if (aligned_seq1[i] == '-' || aligned_seq2[i] == '-') {
+            // count longest match
+            if (_seq1[i] != '-' && _seq2[i] != '-' && _seq1[i] == _seq2[i]) {
+                current_match++;
+            } else {
+                if (current_match > longest_match) {
+                    longest_match = current_match;
+                }
+                current_match = 0;
+            }
+
+            // count gaps
+            if (_seq1[i] == '-' || _seq2[i] == '-') {
                 gaps++;
             }
         }
 
-        return (static_cast<double>(gaps) / total_positions) * 100;
+        identity_percentage = (static_cast<double>(matches) / total_positions) * 100;
+        hamming_distance = (static_cast<double>(mismatches) / total_positions) * 100;
+        mutation_frequency = (static_cast<double>(mutations) / total_positions) * 100;
+        alignment_coverage = (static_cast<double>(_positions) / total_positions) * 100;
+        longest_continous_match = longest_match;
+        num_gaps = gaps;
+        gap_percentage = (static_cast<double>(gaps) / total_positions) * 100;
     }
 
+
+
 public:
-    // Constructor that takes two aligned sequences and computes statistics
+    // Constructor that takes two  sequences and computes statistics
     Statistics(const std::string& seq1, const std::string& seq2)
-        : aligned_seq1(seq1), aligned_seq2(seq2) {
+        : _seq1(seq1), _seq2(seq2) {
         
         // Check if the sequences are of the same length
-        if (aligned_seq1.length() != aligned_seq2.length()) {
+        if (_seq1.length() != _seq2.length()) {
             std::cerr << "Error: Sequences must be of the same length!" << std::endl;
             return;
         }
 
-        // Calculate both statistics
-        identity_percentage = calculate_identity();
-        gap_percentage = calculate_gap_percentage();
+        // Calculate statistics
+        calculate_statistics();    
     }
 
-    // Getter methods for the statistics
+    // Getter methods for statistics
     double get_identity_percentage() const {
         return identity_percentage;
     }
@@ -63,9 +98,30 @@ public:
         return gap_percentage;
     }
 
+    double get_mutation_frequency() const {
+        return mutation_frequency;
+    }
+
+    double get_alignment_coverage() const {
+        return alignment_coverage;
+    }
+
+    int get_number_gaps() const {
+        return num_gaps;
+    }
+
+    int get_longest_continous_match() const {
+        return longest_continous_match;
+    }
+
     // Print method to display statistics
     void print_statistics() const {
         std::cout << "Identity Percentage: " << identity_percentage << "%" << std::endl;
+        std::cout << "Hamming Distance: " << hamming_distance << "%" << std::endl;
         std::cout << "Gap Percentage: " << gap_percentage << "%" << std::endl;
+        std::cout << "Number of Gaps: " << num_gaps << std::endl;
+        std::cout << "Longest Contiguous Match: " << longest_continous_match << std::endl;
+        std::cout << "Mutation Frequency: " << mutation_frequency << "%" << std::endl;
+        std::cout << "Alignment Coverage: " << alignment_coverage << "%" << std::endl;
     }
 };

@@ -5,6 +5,10 @@ Mainly a project for me to practice C++ and learn some Bioinformatics.
 
 #### Methods:
 - Needleman-Wunsch alignment
+- Smith-Waterman alignment
+
+- Identity Percentage
+- Gap Percentage
 
 
 
