@@ -7,9 +7,15 @@ Mainly a project for me to practice C++ and learn some Bioinformatics.
 - Needleman-Wunsch alignment
 - Smith-Waterman alignment
 
-- Identity Percentage
-- Gap Percentage
 
+#### Statistics
+- Identity percentage
+- Gap percentage
+- Mutation frequency
+- Alignment coverage
+- Hamming distance
+- Num gaps
+- Longest continous match
 
 
 #### Run:
