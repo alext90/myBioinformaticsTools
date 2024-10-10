@@ -1,11 +1,12 @@
 // alignment.cpp
 #include "alignment.h"
+#include "stats.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 // Implement Needleman-Wunsch algorithm
-std::tuple<std::string, std::string, int> needleman_wunsch(const std::string& seq1, const std::string& seq2, int match, int mismatch, int gap) {
+std::pair<std::string, std::string> needleman_wunsch(const std::string& seq1, const std::string& seq2, int match, int mismatch, int gap) {
     int n = seq1.length();
     int m = seq2.length();
 
@@ -56,14 +57,13 @@ std::tuple<std::string, std::string, int> needleman_wunsch(const std::string& se
     // Reverse the aligned sequences
     std::reverse(aligned_seq1.begin(), aligned_seq1.end());
     std::reverse(aligned_seq2.begin(), aligned_seq2.end());
+    std::cout << "Alignment Score: " << score[n][m] << std::endl;
 
-    int alignment_score = score[n][m];
-
-    return std::make_tuple(aligned_seq1, aligned_seq2, alignment_score);
+    return {aligned_seq1, aligned_seq2};
 }
 
 // Implement Smith-Waterman algorithm
-std::tuple<std::string, std::string, int> smith_waterman(const std::string& seq1, const std::string& seq2, int match, int mismatch, int gap) {
+std::pair<std::string, std::string> smith_waterman(const std::string& seq1, const std::string& seq2, int match, int mismatch, int gap) {
     int n = seq1.length();
     int m = seq2.length();
 
@@ -119,10 +119,9 @@ std::tuple<std::string, std::string, int> smith_waterman(const std::string& seq1
     // Reverse the aligned sequences
     std::reverse(aligned_seq1.begin(), aligned_seq1.end());
     std::reverse(aligned_seq2.begin(), aligned_seq2.end());
+    std::cout << "Alignment Score: " << score[n][m] << std::endl;
 
-    int alignment_score = score[n][m];
-
-    return std::make_tuple(aligned_seq1, aligned_seq2, alignment_score);
+    return {aligned_seq1, aligned_seq2};
 }
 
 // Utility function to print aligned sequences

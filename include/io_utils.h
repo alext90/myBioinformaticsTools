@@ -1,4 +1,8 @@
-#include "fasta_parser.h"
+#ifndef IO_UTILS_H
+#define IO_UTILS_H
+
+#include <string>
+#include <vector>
 #include <fstream>
 #include <iostream>
 
@@ -33,3 +37,21 @@ std::vector<std::string> parse_fasta(const std::string& filename) {
 
     return sequences;
 }
+
+// Function to write sequences to a FASTA file
+void write_fasta(const std::string& filename, const std::vector<std::string>& sequences) {
+    std::ofstream ofs(filename);
+    if (!ofs) {
+        std::cerr << "Error: Could not open file " << filename << " for writing!" << std::endl;
+        exit(1);
+    }
+
+    for (size_t i = 0; i < sequences.size(); ++i) {
+        ofs << ">Sequence_" << i + 1 << "\n";
+        ofs << sequences[i] << "\n";
+    }
+
+    ofs.close();
+}
+
+#endif // IO_UTILS_H

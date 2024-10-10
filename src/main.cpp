@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include "alignment.h"
-#include "fasta_parser.h"
+#include "io_utils.h"
+#include "statistics.cpp"
 
 int main(int argc, char* argv[]) {
     // Check if a file path has been provided
@@ -28,15 +29,21 @@ int main(int argc, char* argv[]) {
     int mismatch = -1;
     int gap = -2;
 
-    auto [aligned_seq1_nw, aligned_seq2_nw, score_nw] = needleman_wunsch(seq1, seq2, match, mismatch, gap);
     std::cout << "Needleman-Wunsch Alignment:\n";
-    std::cout << "Alignment Score: " << score_nw << std::endl;
-    print_alignment(aligned_seq1_nw, aligned_seq2_nw);
+    auto [aligned_seq1_nw, aligned_seq2_nw] = needleman_wunsch(seq1, seq2, match, mismatch, gap);
+    Statistics stats_nw(aligned_seq1_nw, aligned_seq2_nw);
+    stats_nw.print_statistics();
 
-    auto [aligned_seq1_sw, aligned_seq2_sw, score_sw] = smith_waterman(seq1, seq2, match, mismatch, gap);
     std::cout << "\nSmith-Waterman Alignment:\n";
-    std::cout << "Alignment Score: " << score_sw << std::endl;
-    print_alignment(aligned_seq1_sw, aligned_seq2_sw);
+    auto [aligned_seq1_sw, aligned_seq2_sw] = smith_waterman(seq1, seq2, match, mismatch, gap);
+    //print_alignment(aligned_seq1_sw, aligned_seq2_sw);
 
+    // Create a Statistics object with the two sequences
+    Statistics stats_sw(aligned_seq1_sw, aligned_seq2_sw);
+    stats_sw.print_statistics();
+
+    // Write the aligned sequences to a new FASTA file
+    std::vector<std::string> aligned_sequences = {aligned_seq1_nw, aligned_seq2_nw};
+    write_fasta(output_file, aligned_sequences);
     return 0;
 }
